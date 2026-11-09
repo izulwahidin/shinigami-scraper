@@ -1,0 +1,29 @@
+{
+    "name": "izul/shinigami-scraper",
+    "description": "Fast, resumable Shinigami (shinigami.asia) manga/manhwa/manhua image scraper with SQLite state tracking.",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-pdo": "*",
+        "ext-pdo_sqlite": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Shinigami\\": "src/"
+        }
+    },
+    "scripts": {
+        "scrape": "php bin/scrape.php sync",
+        "stats": "php bin/scrape.php stats",
+        "projects": "php bin/scrape.php projects",
+        "retry": "php bin/scrape.php retry-failed",
+        "test": "php tests/run.php"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
