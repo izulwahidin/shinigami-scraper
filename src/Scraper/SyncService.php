@@ -336,6 +336,7 @@ final class SyncService
                     $detail->updatedAt !== $chapterRow['source_updated_at']
                     || $detail->imageCount() !== (int) $chapterRow['image_count']
                     || !is_file($metadataPath)
+                    || !$this->chapterFilesIntact($detail, $format, $slug, $folder)
                 ));
 
             if ($isDone && !$needsRework) {
@@ -627,6 +628,40 @@ final class SyncService
                 ]);
             }
         });
+    }
+
+    /**
+     * Verifies that every image referenced by the chapter detail already exists
+     * on disk. Used by --refresh so accidentally deleted images are repaired
+     * instead of being silently skipped because the chapter is marked done.
+     */
+    private function chapterFilesIntact(
+        ChapterDetail $detail,
+        string $format,
+        string $slug,
+        string $folder,
+    ): bool {
+        $width = max(3, strlen((string) $detail->imageCount()));
+
+        foreach ($detail->images as $index => $sourceFile) {
+            $extension = pathinfo($sourceFile, PATHINFO_EXTENSION);
+            $path = $this->paths->chapterImagePath(
+                $format,
+                $slug,
+                $folder,
+                $index + 1,
+                $width,
+                $extension,
+            );
+
+            clearstatcache(true, $path);
+
+            if (!is_file($path) || (int) @filesize($path) < $this->config->minImageBytes) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

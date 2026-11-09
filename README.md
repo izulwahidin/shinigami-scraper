@@ -296,6 +296,12 @@ Contoh untuk cron:
 : Hapus folder chapter, lalu jalankan `sync --project=... --latest=N --force`.
   Status di SQLite akan otomatis disesuaikan saat `--force`.
 
+**File gambar terhapus tanpa sengaja**
+: Jalankan `php bin/scrape.php sync --project=SLUG --refresh -v`. Chapter yang
+  folder, metadata, atau sebagian file gambarnya hilang akan diunduh ulang;
+  chapter yang masih utuh tetap dilewati. Gunakan `--force` jika ingin
+  mengunduh ulang semua chapter tanpa pemeriksaan.
+
 **Mau pindah lokasi arsip**
 : Set `SHINIGAMI_DOWNLOAD_DIR`. Database menyimpan path relatif (folder), bukan
   path absolut, sehingga arsip bisa dipindah tanpa mengubah DB.
